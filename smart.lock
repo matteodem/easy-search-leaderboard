@@ -1,0 +1,15 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "easy-search": {}
+    },
+    "packages": {
+      "easy-search": {
+        "git": "https://github.com/matteodem/meteor-easy-search.git",
+        "tag": "v0.2.1",
+        "commit": "2540b6829c78a03cbb043a02cd792662ac372761"
+      }
+    }
+  }
+}
