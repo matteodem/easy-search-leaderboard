@@ -2,12 +2,17 @@
 // it is backed by a MongoDB collection named "players".
 
 Players = new Meteor.Collection("players");
+LocalCache = new Meteor.Collection(null);
 
 if (Meteor.isClient) { 
 
   Template.leaderboard.players = function () {
     var selector = {},
-        searchResults = Session.get('ids');
+        searchResults = LocalCache.findOne('search_ids');
+
+    if (_.isObject(searchResults)) {
+        searchResults = searchResults.ids;
+    }
 
     if ("undefined" !== typeof searchResults && searchResults.length > 0) {
       selector = { '_id' : { '$in' : searchResults } };
@@ -35,7 +40,7 @@ if (Meteor.isClient) {
                 return doc._id;
             });
 
-            Session.set('ids', data);
+            LocalCache.upsert({ _id : 'search_ids' }, { _id : 'search_ids', ids: data });
         });
     }
   });
