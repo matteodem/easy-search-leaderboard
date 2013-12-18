@@ -90,6 +90,14 @@ Meteor.startup(function () {
     EasySearch.createSearchIndex('players', {
       'collection'    : Players,              // instanceof Meteor.Collection
       'field'         : ['name', 'score'],    // can also be an array of fields
-      'limit'         : 20                   // default: 10
+      'limit'         : 20,                   // default: 10
+      'query'         : function (fields, string) {
+          return {
+                          "fuzzy_like_this" : {
+                              "fields" : fields,
+                              "like_text" : string
+                          }
+                      };
+      }
     });
 });
