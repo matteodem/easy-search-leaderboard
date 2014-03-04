@@ -15,6 +15,13 @@ body {
     margin: 0 auto;    
 }
 
+.no-results {
+    color: red;
+    margin-top: 40px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
 .player {
     cursor: pointer;
     padding: 5px;

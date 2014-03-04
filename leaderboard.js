@@ -8,13 +8,14 @@ if (Meteor.isClient) {
 
   Template.leaderboard.players = function () {
     var selector = {},
+        inputValue =  $('#search').val(),
         searchResults = LocalCache.findOne('search_ids');
 
     if (_.isObject(searchResults)) {
         searchResults = searchResults.ids;
     }
 
-    if ("undefined" !== typeof searchResults && searchResults.length > 0) {
+    if ((inputValue && inputValue.length > 3) || ("undefined" !== typeof searchResults && searchResults.length > 0)) {
       selector = { '_id' : { '$in' : searchResults } };
     }
 
@@ -89,15 +90,7 @@ Meteor.startup(function () {
     // on Client and Server
     EasySearch.createSearchIndex('players', {
       'collection'    : Players,              // instanceof Meteor.Collection
-      'field'         : ['name', 'score'],    // can also be an array of fields
+      'field'         : 'name',    // can also be an array of fields
       'limit'         : 20,                   // default: 10
-      'query'         : function (fields, string) {
-          return {
-                          "fuzzy_like_this" : {
-                              "fields" : fields,
-                              "like_text" : string
-                          }
-                      };
-      }
     });
 });

@@ -13,6 +13,8 @@
   <div class="leaderboard">
     {{#each players}}
       {{> player}}
+    {{else}}
+      <div class="no-results">No players found!</div>
     {{/each}}
   </div>
 
