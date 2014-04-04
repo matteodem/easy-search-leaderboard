@@ -12,7 +12,7 @@ body {
 
 #outer {
     width: 600px;
-    margin: 0 auto;    
+    margin: 0 auto;
 }
 
 .no-results {
@@ -73,4 +73,10 @@ body {
     height: 30px;
     font-size: 20px;
     padding-left: 10px;
+}
+
+.please-search {
+    margin-top: 10px;
+    color: grey;
+    font-size: 18px;
 }
