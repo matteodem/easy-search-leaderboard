@@ -84,6 +84,6 @@ if (Meteor.isServer) {
             'collection'    : Players,              // instanceof Meteor.Collection
             'field'         : 'name',    // can also be an array of fields
             'limit'         : 20,                   // default: 10
-            //'use'           : 'mongo-db'
+            'use'           : 'mongo-db'
         });
     });
