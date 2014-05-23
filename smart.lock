@@ -7,8 +7,8 @@
     "packages": {
       "easy-search": {
         "git": "https://github.com/matteodem/meteor-easy-search.git",
-        "tag": "v0.2.1",
-        "commit": "2540b6829c78a03cbb043a02cd792662ac372761"
+        "tag": "v0.4.0",
+        "commit": "6ab16e6c4b505d6d02de8be7e1633f6561af971f"
       }
     }
   }
