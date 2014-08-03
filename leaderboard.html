@@ -10,20 +10,20 @@
 
 <template name="leaderboard">
     <div class="search-input">
-        {{> esInput index="players" id="search" placeholder="Search some stuff.." }}
+        {{> esInput index="players" id="search" placeholder="Search some stuff.." convertnumber=true }}
     </div>
 
-    {{#ifEsIsSearching index="players" id="search"}}
-        <div>Loading...</div>
+    {{#ifEsIsSearching index="players" id="search" logic="OR" }}
+        <div>Searching...</div>
     {{/ifEsIsSearching}}
 
     <div class="leaderboard">
         {{#if inputIsNotEmpty}}
-            {{#esEach index="players" options=esOptions}}
+            {{#esEach index="players" id="search" options=esOptions}}
                 {{> player}}
             {{/esEach}}
 
-            {{#ifEsHasNoResults index="players" id="search"}}
+            {{#ifEsHasNoResults index="players" id="search" logic="OR" }}
                 <div class="no-results">No results found!</div>
             {{/ifEsHasNoResults}}
         {{else}}
@@ -41,6 +41,12 @@
   {{#unless selected_name}}
   <div class="none">Click a player to select</div>
   {{/unless}}
+  
+  <button class="show-autosuggest">Show Autosuggest</button>
+  {{#if showAutosuggest}}
+      <h2>Autosuggest Demo</h2>
+      {{> esAutosuggest index="players" id="autosuggest" }}
+  {{/if}}
 </template>
 
 <template name="player">

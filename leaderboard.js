@@ -23,6 +23,10 @@ if (Meteor.isClient) {
         return {sort: {score: -1, name: 1}};
     }
 
+    Template.leaderboard.showAutosuggest = function () {
+        return Session.get('showAutosuggest');
+    }
+
     Template.leaderboard.events({
         'keyup .search-input input': function (e) {
             Session.set('searchVal', $(e.target).val());
@@ -35,6 +39,11 @@ if (Meteor.isClient) {
             }
 
             Players.update(Session.get('selected_player'), { $inc: { score : 5 } });
+        },
+        'click .show-autosuggest' : function (e) {
+            Session.set('showAutosuggest', !Session.get('showAutosuggest'));
+
+            e.preventDefault();
         }
     });
 
@@ -48,7 +57,7 @@ if (Meteor.isClient) {
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
     Meteor.startup(function () {
-        if (Players.find().count() === 0) {
+        if (Players.find().count() !== 0) {
             var first_names = ["Ada",
             "Grace",
             "Marie",
@@ -72,18 +81,20 @@ if (Meteor.isServer) {
             for (var i = 0; i < 30; i++)
             Players.insert({
                 name: (first_names[Math.floor(Math.random() * 10)] + ' ' + last_names[Math.floor(Math.random() * 10)]),
-                score: Math.floor(Random.fraction()*10)*5});
-            }
-        });
-    }
+                score: Math.floor(Random.fraction()*10)*5
+            });
+        }
+    });
+}
 
     // Searching
     Meteor.startup(function () {
         // on Client and Server
         EasySearch.createSearchIndex('players', {
             'collection'    : Players,              // instanceof Meteor.Collection
-            'field'         : 'name',    // can also be an array of fields
+            'field'         : ['name', 'score'],    // can also be an array of fields
             'limit'         : 20,                   // default: 10
-            'use'           : 'mongo-db'
+            'use'           : 'mongo-db',
+            'convertNumbers': true
         });
     });
