@@ -57,7 +57,7 @@ if (Meteor.isClient) {
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
     Meteor.startup(function () {
-        if (Players.find().count() !== 0) {
+        if (Players.find().count() === 0) {
             var first_names = ["Ada",
             "Grace",
             "Marie",
