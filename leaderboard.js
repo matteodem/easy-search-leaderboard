@@ -57,28 +57,30 @@ if (Meteor.isClient) {
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
     Meteor.startup(function () {
-        if (Players.find().count() === 0) {
-            var first_names = ["Ada",
-            "Grace",
-            "Marie",
-            "Carl",
-            "Nikola",
-            "Claude",
-            "Peter",
-            "Stefan",
-            "Stephen",
-            "Lisa"],
-            last_names = ["Lovelace",
-            "Hopper",
-            "Curie",
-            "Tesla",
-            "Shannon",
-            "Müller",
-            "Meier",
-            "Miller",
-            "Gaga",
-            "Franklin"];
-            for (var i = 0; i < 30; i++)
+        var first_names = ["Ada",
+        "Grace",
+        "Marie",
+        "Carl",
+        "Nikola",
+        "Claude",
+        "Peter",
+        "Stefan",
+        "Stephen",
+        "Lisa"],
+        last_names = ["Lovelace",
+        "Hopper",
+        "Curie",
+        "Tesla",
+        "Shannon",
+        "Müller",
+        "Meier",
+        "Miller",
+        "Gaga",
+        "Franklin"];
+
+        Players.remove({ });
+
+        for (var i = 0; i < 30; i++) {
             Players.insert({
                 name: (first_names[Math.floor(Math.random() * 10)] + ' ' + last_names[Math.floor(Math.random() * 10)]),
                 score: Math.floor(Random.fraction()*10)*5
