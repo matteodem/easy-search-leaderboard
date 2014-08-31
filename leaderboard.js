@@ -14,11 +14,6 @@ if (Meteor.isClient) {
         return Session.equals("selected_player", this._id) ? "selected" : '';
     };
 
-    Template.leaderboard.inputIsNotEmpty = function () {
-        var searchValue = Session.get('searchVal');
-        return searchValue && searchValue.length > 0;
-    };
-
     Template.leaderboard.esOptions = function () {
         return {sort: {score: -1, name: 1}};
     }
@@ -28,9 +23,6 @@ if (Meteor.isClient) {
     }
 
     Template.leaderboard.events({
-        'keyup .search-input input': function (e) {
-            Session.set('searchVal', $(e.target).val());
-        },
         'click .inc' : function () {
             var player = Session.get('selected_player');
 

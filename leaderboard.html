@@ -18,17 +18,17 @@
     {{/ifEsIsSearching}}
 
     <div class="leaderboard">
-        {{#if inputIsNotEmpty}}
-            {{#esEach index="players" id="search" options=esOptions}}
-                {{> player}}
-            {{/esEach}}
-
-            {{#ifEsHasNoResults index="players" id="search" logic="OR" }}
-                <div class="no-results">No results found!</div>
-            {{/ifEsHasNoResults}}
-        {{else}}
+        {{#ifEsInputIsEmpty index="players" id="search" }}
             <div class="please-search">Search for a name (e.g. Peter)</div>
-        {{/if}}
+        {{/ifEsInputIsEmpty}}
+
+        {{#esEach index="players" id="search" options=esOptions}}
+            {{> player}}
+        {{/esEach}}
+
+        {{#ifEsHasNoResults index="players" id="search" logic="OR" }}
+            <div class="no-results">No results found!</div>
+        {{/ifEsHasNoResults}}
     </div>
 
   {{#if selected_name}}
