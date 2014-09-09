@@ -22,7 +22,7 @@
             <div class="please-search">Search for a name (e.g. Peter)</div>
         {{/ifEsInputIsEmpty}}
 
-        {{#esEach index="players" id="search" options=esOptions}}
+        {{#esEach index="players" id="search"}}
             {{> player}}
         {{/esEach}}
 

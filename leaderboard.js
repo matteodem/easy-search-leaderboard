@@ -14,13 +14,9 @@ if (Meteor.isClient) {
         return Session.equals("selected_player", this._id) ? "selected" : '';
     };
 
-    Template.leaderboard.esOptions = function () {
-        return {sort: {score: -1, name: 1}};
-    }
-
     Template.leaderboard.showAutosuggest = function () {
         return Session.get('showAutosuggest');
-    }
+    };
 
     Template.leaderboard.events({
         'click .inc' : function () {
@@ -81,14 +77,13 @@ if (Meteor.isServer) {
     });
 }
 
-    // Searching
-    Meteor.startup(function () {
-        // on Client and Server
-        EasySearch.createSearchIndex('players', {
-            'collection'    : Players,              // instanceof Meteor.Collection
-            'field'         : ['name', 'score'],    // can also be an array of fields
-            'limit'         : 20,                   // default: 10
-            'use'           : 'mongo-db',
-            'convertNumbers': true
-        });
-    });
+// on Client and Server
+EasySearch.createSearchIndex('players', {
+  'collection'    : Players,              // instanceof Meteor.Collection
+  'field'         : ['name', 'score'],    // can also be an array of fields
+  'limit'         : 20,                   // default: 10
+  'convertNumbers': true,
+  'sort' : function () {
+    return {score: -1};
+  }
+});
