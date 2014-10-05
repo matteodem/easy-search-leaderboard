@@ -83,7 +83,7 @@ EasySearch.createSearchIndex('players', {
   'field'         : ['name', 'score'],    // can also be an array of fields
   'limit'         : 20,                   // default: 10
   'convertNumbers': true,
-  'sort' : function () {
-    return {score: -1};
+  'sort'          : function () {
+      return { 'score' : -1 };
   }
 });
