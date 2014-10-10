@@ -41,12 +41,16 @@
   {{#unless selected_name}}
   <div class="none">Click a player to select</div>
   {{/unless}}
-  
+
   <button class="show-autosuggest">Show Autosuggest</button>
   {{#if showAutosuggest}}
       <h2>Autosuggest Demo</h2>
-      {{> esAutosuggest index="players" id="autosuggest" }}
+      {{> esAutosuggest index="players" id="autosuggest" renderSuggestion=suggestionTpl }}
   {{/if}}
+</template>
+
+<template name="suggestion">
+  {{pre}}<span class="found">{{found}}</span>{{post}} ({{doc.score}})
 </template>
 
 <template name="player">

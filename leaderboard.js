@@ -18,6 +18,10 @@ if (Meteor.isClient) {
         return Session.get('showAutosuggest');
     };
 
+    Template.leaderboard.suggestionTpl = function () {
+        return Template.suggestion;
+    };
+
     Template.leaderboard.events({
         'click .inc' : function () {
             var player = Session.get('selected_player');
@@ -84,6 +88,6 @@ EasySearch.createSearchIndex('players', {
   'limit'         : 20,                   // default: 10
   'convertNumbers': true,
   'sort'          : function () {
-      return { 'score' : -1 };
+    return { 'score' : -1 };
   }
 });
