@@ -5,22 +5,20 @@ Players = new Meteor.Collection("players");
 
 if (Meteor.isClient) {
 
-    Template.leaderboard.selected_name = function () {
-        var player = Players.findOne(Session.get("selected_player"));
-        return player && player.name;
-    };
+    Template.leaderboard.helpers({
+      selected_name : function () {
+          var player = Players.findOne(Session.get("selected_player"));
+          return player && player.name;
+      },
 
-    Template.player.selected = function () {
-        return Session.equals("selected_player", this._id) ? "selected" : '';
-    };
+      showAutosuggest : function () {
+          return Session.get('showAutosuggest');
+      },
 
-    Template.leaderboard.showAutosuggest = function () {
-        return Session.get('showAutosuggest');
-    };
-
-    Template.leaderboard.suggestionTpl = function () {
-        return Template.suggestion;
-    };
+      suggestionTpl : function () {
+          return Template.suggestion;
+      }
+    });
 
     Template.leaderboard.events({
         'click .inc' : function () {
@@ -37,6 +35,12 @@ if (Meteor.isClient) {
 
             e.preventDefault();
         }
+    });
+
+    Template.player.helpers({
+      selected : function () {
+          return Session.equals("selected_player", this._id) ? "selected" : '';
+      }
     });
 
     Template.player.events({
