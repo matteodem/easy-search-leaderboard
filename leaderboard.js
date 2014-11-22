@@ -3,67 +3,98 @@
 
 Players = new Meteor.Collection("players");
 
+var categories = ["Genius", "Geek", "Hipster", "Gangster", "Worker"]
+
 if (Meteor.isClient) {
 
-    Template.leaderboard.helpers({
-      selected_name : function () {
-          var player = Players.findOne(Session.get("selected_player"));
-          return player && player.name;
-      },
+  Meteor.startup(function () {
+    Meteor.call('allDocs', function (err, count) {
+      Session.set('allDocs', count);
+    })
+  });
 
-      showAutosuggest : function () {
-          return Session.get('showAutosuggest');
-      },
+  Template.leaderboard.helpers({
+    selected_name: function() {
+      var player = Players.findOne(Session.get("selected_player"));
+      return player && player.name;
+    },
 
-      suggestionTpl : function () {
-          return Template.suggestion;
+    showAutosuggest: function() {
+      return Session.get('showAutosuggest');
+    },
+    suggestionTpl: function() {
+      return Template.suggestion;
+    },
+    category: function() {
+      return ['All'].concat(categories);
+    },
+    allDocs: function () {
+      return Session.get('allDocs');
+    }
+  });
+
+  Template.leaderboard.events({
+    'click .inc': function(e) {
+      var player = Session.get('selected_player');
+
+      if (!player) {
+        return;
       }
-    });
 
-    Template.leaderboard.events({
-        'click .inc' : function () {
-            var player = Session.get('selected_player');
-
-            if (!player) {
-                return;
-            }
-
-            Players.update(Session.get('selected_player'), { $inc: { score : 5 } });
-        },
-        'click .show-autosuggest' : function (e) {
-            Session.set('showAutosuggest', !Session.get('showAutosuggest'));
-
-            e.preventDefault();
+      Players.update(Session.get('selected_player'), {
+        $inc: {
+          score: parseInt($(e.target).data('val'), 10)
         }
-    });
+      });
+    },
+    'click .show-autosuggest': function(e) {
+      Session.set('showAutosuggest', !Session.get('showAutosuggest'));
 
-    Template.player.helpers({
-      selected : function () {
-          return Session.equals("selected_player", this._id) ? "selected" : '';
-      }
-    });
+      e.preventDefault();
+    },
+    'change select': function(e) {
+      var instance = EasySearch.getComponentInstance({
+        index: 'players',
+        id: 'search'
+      });
 
-    Template.player.events({
-        'click': function () {
-            Session.set("selected_player", this._id);
-        }
-    });
+      EasySearch.changeProperty('players', 'filteredCategory', $(e.target).val());
+      EasySearch.changeLimit('players', 10);
+
+      instance.triggerSearch();
+    }
+  });
+
+  Template.player.helpers({
+    selected: function() {
+      return Session.equals("selected_player", this._id) ? "selected" : '';
+    }
+  });
+
+  Template.player.events({
+    'click': function() {
+      Session.set("selected_player", this._id);
+    }
+  });
 }
 
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
-    Meteor.startup(function () {
-        var first_names = ["Ada",
-        "Grace",
-        "Marie",
-        "Carl",
-        "Nikola",
-        "Claude",
-        "Peter",
-        "Stefan",
-        "Stephen",
-        "Lisa"],
-        last_names = ["Lovelace",
+  Meteor.startup(function() {
+    var first_names = ["Ada",
+      "Grace",
+      "Marie",
+      "Carl",
+      "Nikola",
+      "Claude",
+      "Peter",
+      "Stefan",
+      "Stephen",
+      "Lisa",
+      "Christian",
+      "Barack"
+    ],
+      last_names = ["Lovelace",
         "Hopper",
         "Curie",
         "Tesla",
@@ -72,26 +103,52 @@ if (Meteor.isServer) {
         "Meier",
         "Miller",
         "Gaga",
-        "Franklin"];
+        "Franklin"
+      ];
 
-        Players.remove({ });
-
-        for (var i = 0; i < 30; i++) {
-            Players.insert({
-                name: (first_names[Math.floor(Math.random() * 10)] + ' ' + last_names[Math.floor(Math.random() * 10)]),
-                score: Math.floor(Random.fraction()*10)*5
-            });
+      Meteor.methods({
+        allDocs : function () {
+          return Players.find().count();
         }
-    });
+      });
+
+    if (Players.find().count() === 0) {
+      // one hunderd thousand docs :O
+      for (var i = 0; i < 100 * 1000; i++) {
+        console.log(i + ' doc indexed');
+        Players.insert({
+          name: Random.choice(first_names) + ' ' + Random.choice(last_names),
+          score: Math.floor(Random.fraction() * 1000 / Random.fraction() / 100),
+          category: Random.choice(categories)
+        });
+      }
+
+      console.log('done!');
+    }
+  });
 }
 
 // on Client and Server
 EasySearch.createSearchIndex('players', {
-  'collection'    : Players,              // instanceof Meteor.Collection
-  'field'         : ['name', 'score'],    // can also be an array of fields
-  'limit'         : 20,                   // default: 10
+  'collection': Players, // instanceof Meteor.Collection
+  'field': ['name', 'score'], // array of fields to be searchable
+  'limit': 10,
   'convertNumbers': true,
-  'sort'          : function () {
-    return { 'score' : -1 };
+  'props': {
+    'filteredCategory': 'All'
+  },
+  'sort': function() {
+    return { 'score': -1, 'name': -1 };
+  },
+  'query': function(searchString) {
+    // Default query that will be used for the mongo-db selector
+    var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
+
+    // filter for categories if set
+    if (this.props.filteredCategory.toLowerCase() !== 'all') {
+      query.category = this.props.filteredCategory;
+    }
+
+    return query;
   }
 });

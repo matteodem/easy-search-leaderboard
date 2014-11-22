@@ -10,7 +10,16 @@
 
 <template name="leaderboard">
     <div class="search-input">
-        {{> esInput index="players" id="search" placeholder="Search some stuff.." convertnumber=true }}
+        {{> esInput index="players" id="search" placeholder="Search players... (e.g Peter)" convertnumber=true }}
+    </div>
+    
+    <div class="select-box">
+    <span>Filter by Category:</span>
+    <select>
+        {{#each category}}
+        <option>{{this}}</option>
+        {{/each}}
+    </select>
     </div>
 
     {{#ifEsIsSearching index="players" id="search" logic="OR" }}
@@ -19,7 +28,7 @@
 
     <div class="leaderboard">
         {{#ifEsInputIsEmpty index="players" id="search" }}
-            <div class="please-search">Search for a name (e.g. Peter)</div>
+            <div class="please-search">There are {{allDocs}} documents for search available.</div>
         {{/ifEsInputIsEmpty}}
 
         {{#esEach index="players" id="search"}}
@@ -28,13 +37,18 @@
 
         {{#ifEsHasNoResults index="players" id="search" logic="OR" }}
             <div class="no-results">No results found!</div>
+        {{else}}
+            {{> esLoadMoreButton index="players" id="search" }}
         {{/ifEsHasNoResults}}
     </div>
 
   {{#if selected_name}}
   <div class="details">
     <div class="name">{{selected_name}}</div>
-    <input type="button" class="inc" value="Give 5 points" />
+    <input type="button" class="inc" data-val="5" value="Give 5 points" />
+    <input type="button" class="inc" data-val="10" value="Give 10 points" />
+    <input type="button" class="inc" data-val="100" value="Give 100 points" />
+        <input type="button" class="inc" data-val="1000" value="Give 1000 points" />
   </div>
   {{/if}}
 
@@ -45,7 +59,7 @@
   <button class="show-autosuggest">Show Autosuggest</button>
   {{#if showAutosuggest}}
       <h2>Autosuggest Demo</h2>
-      {{> esAutosuggest index="players" id="autosuggest" renderSuggestion=suggestionTpl }}
+      {{> esAutosuggest index="players" id="autosuggest"  renderSuggestion=suggestionTpl }}
   {{/if}}
 </template>
 
@@ -57,5 +71,6 @@
   <div class="player {{selected}}">
     <span class="name">{{name}}</span>
     <span class="score">{{score}}</span>
+    <span class="categories">{{category}}</span>
   </div>
 </template>

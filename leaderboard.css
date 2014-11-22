@@ -80,3 +80,7 @@ body {
     color: grey;
     font-size: 18px;
 }
+
+.select-box {
+  margin: 20px 0;
+}
