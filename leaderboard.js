@@ -6,6 +6,7 @@ Players = new Meteor.Collection("players");
 var categories = ["Genius", "Geek", "Hipster", "Gangster", "Worker"]
 
 if (Meteor.isClient) {
+  Meteor.subscribe('10docs');
 
   Meteor.startup(function () {
     Meteor.call('allDocs', function (err, count) {
@@ -30,6 +31,11 @@ if (Meteor.isClient) {
     },
     allDocs: function () {
       return Session.get('allDocs');
+    },
+    playerNames: function () {
+      return _.first(_.uniq(Players.find().map(function (doc) {
+        return doc.name;
+      })), 5).join(', ');
     }
   });
 
@@ -106,11 +112,15 @@ if (Meteor.isServer) {
         "Franklin"
       ];
 
-      Meteor.methods({
-        allDocs : function () {
-          return Players.find().count();
-        }
-      });
+    Meteor.methods({
+      allDocs : function () {
+        return Players.find().count();
+      }
+    });
+    
+    Meteor.publish('10docs', function () {
+      return Players.find({}, { limit: 10 });
+    });
 
     if (Players.find().count() === 0) {
       // one hunderd thousand docs :O

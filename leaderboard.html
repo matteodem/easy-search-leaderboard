@@ -10,7 +10,7 @@
 
 <template name="leaderboard">
     <div class="search-input">
-        {{> esInput index="players" id="search" placeholder="Search players... (e.g Peter)" convertnumber=true }}
+        {{> esInput index="players" id="search" placeholder="Search players..." convertnumber=true }}
     </div>
     
     <div class="select-box">
@@ -28,7 +28,9 @@
 
     <div class="leaderboard">
         {{#ifEsInputIsEmpty index="players" id="search" }}
-            <div class="please-search">There are {{allDocs}} documents for search available.</div>
+            <div class="please-search">There are {{allDocs}} documents for search available. (e.g {{playerNames}})</div>
+        {{else}}
+            <div class="please-search">There are other players called {{playerNames}}</div>
         {{/ifEsInputIsEmpty}}
 
         {{#esEach index="players" id="search"}}
