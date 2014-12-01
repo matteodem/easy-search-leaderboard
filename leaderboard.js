@@ -2,11 +2,12 @@
 // it is backed by a MongoDB collection named "players".
 
 Players = new Meteor.Collection("players");
+TestCollection = new Meteor.Collection('testData');
 
 var categories = ["Genius", "Geek", "Hipster", "Gangster", "Worker"]
 
 if (Meteor.isClient) {
-  Meteor.subscribe('10docs');
+  Meteor.subscribe('allDocs');
 
   Meteor.startup(function () {
     Meteor.call('allDocs', function (err, count) {
@@ -19,9 +20,14 @@ if (Meteor.isClient) {
       var player = Players.findOne(Session.get("selected_player"));
       return player && player.name;
     },
-
     showAutosuggest: function() {
       return Session.get('showAutosuggest');
+    },
+    showMultipleIndexes: function() {
+      return Session.get('showMultipleIndexes');
+    },
+    indexes: function () {
+      return ['testData', 'localPlayers'];
     },
     suggestionTpl: function() {
       return Template.suggestion;
@@ -55,7 +61,10 @@ if (Meteor.isClient) {
     },
     'click .show-autosuggest': function(e) {
       Session.set('showAutosuggest', !Session.get('showAutosuggest'));
-
+      e.preventDefault();
+    },
+    'click .show-multiple-indexes': function(e) {
+      Session.set('showMultipleIndexes', !Session.get('showMultipleIndexes'));
       e.preventDefault();
     },
     'change select': function(e) {
@@ -118,8 +127,11 @@ if (Meteor.isServer) {
       }
     });
     
-    Meteor.publish('10docs', function () {
-      return Players.find({}, { limit: 10 });
+    Meteor.publish('allDocs', function () {
+      return [
+        Players.find({}, { limit: 10 }),
+        TestCollection.find({})
+      ];
     });
 
     if (Players.find().count() === 0) {
@@ -135,10 +147,17 @@ if (Meteor.isServer) {
 
       console.log('done!');
     }
+
+    if (TestCollection.find().count() === 0) {
+      for (var i = 0; i < 10; i += 1) {
+        TestCollection.insert({
+          data: 'Peter Stephen Carl Marie Lisa GAGA ' + i
+        });
+      }
+    }
   });
 }
 
-// on Client and Server
 EasySearch.createSearchIndex('players', {
   'collection': Players, // instanceof Meteor.Collection
   'field': ['name', 'score'], // array of fields to be searchable
@@ -162,4 +181,16 @@ EasySearch.createSearchIndex('players', {
 
     return query;
   }
+});
+
+EasySearch.createSearchIndex('testData', {
+  collection: TestCollection,
+  field: 'data',
+  use: 'minimongo'
+});
+
+EasySearch.createSearchIndex('localPlayers', {
+  collection: Players,
+  field: 'name',
+  use: 'minimongo'
 });

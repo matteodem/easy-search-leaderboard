@@ -1,25 +1,25 @@
 <head>
-  <title>Leaderboard</title>
+    <title>Leaderboard</title>
 </head>
 
 <body>
-  <div id="outer">
+<div id="outer">
     {{> leaderboard}}
-  </div>
+</div>
 </body>
 
 <template name="leaderboard">
     <div class="search-input">
         {{> esInput index="players" id="search" placeholder="Search players..." convertnumber=true }}
     </div>
-    
-    <div class="select-box">
-    <span>Filter by Category:</span>
-    <select>
-        {{#each category}}
-        <option>{{this}}</option>
-        {{/each}}
-    </select>
+
+    <div class="margin-box">
+        <span>Filter by Category:</span>
+        <select>
+            {{#each category}}
+                <option>{{this}}</option>
+            {{/each}}
+        </select>
     </div>
 
     {{#ifEsIsSearching index="players" id="search" logic="OR" }}
@@ -44,35 +44,74 @@
         {{/ifEsHasNoResults}}
     </div>
 
-  {{#if selected_name}}
-  <div class="details">
-    <div class="name">{{selected_name}}</div>
-    <input type="button" class="inc" data-val="5" value="Give 5 points" />
-    <input type="button" class="inc" data-val="10" value="Give 10 points" />
-    <input type="button" class="inc" data-val="100" value="Give 100 points" />
-        <input type="button" class="inc" data-val="1000" value="Give 1000 points" />
-  </div>
-  {{/if}}
+    {{#if selected_name}}
+        <div class="details">
+            <div class="name">{{selected_name}}</div>
+            <input type="button" class="inc" data-val="5" value="Give 5 points" />
+            <input type="button" class="inc" data-val="10" value="Give 10 points" />
+            <input type="button" class="inc" data-val="100" value="Give 100 points" />
+            <input type="button" class="inc" data-val="1000" value="Give 1000 points" />
+        </div>
+    {{/if}}
 
-  {{#unless selected_name}}
-  <div class="none">Click a player to select</div>
-  {{/unless}}
+    {{#unless selected_name}}
+        <div class="none">Click a player to select</div>
+    {{/unless}}
 
-  <button class="show-autosuggest">Show Autosuggest</button>
-  {{#if showAutosuggest}}
-      <h2>Autosuggest Demo</h2>
-      {{> esAutosuggest index="players" id="autosuggest"  renderSuggestion=suggestionTpl }}
-  {{/if}}
+    <button class="show-autosuggest">Show Autosuggest</button>
+    {{#if showAutosuggest}}
+        <h2>Autosuggest Demo</h2>
+        {{> esAutosuggest index="players" id="autosuggest"  renderSuggestion=suggestionTpl }}
+    {{/if}}
+
+    <button class="show-multiple-indexes">Search over multiple indexes</button>
+    {{#if showMultipleIndexes}}
+        <h2>Multiple Indexes</h2>
+        {{> esInput index=indexes placeholder="Search for Gaga" }}
+
+        <div class="margin-box">
+
+            {{#ifEsIsSearching index=indexes logic="AND" }}
+                <div>Searching...</div>
+            {{else}}
+                {{#ifEsInputIsEmpty index=indexes }}
+                    Start searching!
+                {{else}}
+                    {{#ifEsHasNoResults index="localPlayers" }}
+                        <div>No results for local players!</div>
+                    {{else}}
+                        <h3>Local Players Results:</h3>
+                    {{/ifEsHasNoResults}}
+                    <ul>
+                        {{#esEach index="localPlayers" }}
+                            <li>{{name}}</li>
+                        {{/esEach}}
+                    </ul>
+
+                    {{#ifEsHasNoResults index="testData" }}
+                        <div>No results for test data!</div>
+                    {{else}}
+                        <h3>Test Data Results:</h3>
+                    {{/ifEsHasNoResults}}
+                    <ul>
+                        {{#esEach index="testData" }}
+                            <li>{{data}}</li>
+                        {{/esEach}}
+                    </ul>
+                {{/ifEsInputIsEmpty}}
+            {{/ifEsIsSearching}}
+        </div>
+    {{/if}}
 </template>
 
 <template name="suggestion">
-  {{pre}}<span class="found">{{found}}</span>{{post}} ({{doc.score}})
+    {{pre}}<span class="found">{{found}}</span>{{post}} ({{doc.score}})
 </template>
 
 <template name="player">
-  <div class="player {{selected}}">
-    <span class="name">{{name}}</span>
-    <span class="score">{{score}}</span>
-    <span class="categories">{{category}}</span>
-  </div>
+    <div class="player {{selected}}">
+        <span class="name">{{name}}</span>
+        <span class="score">{{score}}</span>
+        <span class="categories">{{category}}</span>
+    </div>
 </template>
