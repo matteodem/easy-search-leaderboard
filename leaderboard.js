@@ -170,7 +170,7 @@ EasySearch.createSearchIndex('players', {
   'sort': function() {
     return { 'score': -1, 'name': -1 };
   },
-  'query': function(searchString) {
+  'query': function(searchString, opts) {
     // Default query that will be used for the mongo-db selector
     var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
 
