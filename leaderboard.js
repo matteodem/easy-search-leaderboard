@@ -17,7 +17,7 @@ if (Meteor.isClient) {
 
   Template.leaderboard.helpers({
     selected_name: function() {
-      var player = Players.findOne(Session.get("selected_player"));
+      var player = EasySearch.getIndex('players').findOne(Session.get("selected_player"));
       return player && player.name;
     },
     showAutosuggest: function() {
@@ -158,6 +158,7 @@ if (Meteor.isServer) {
   });
 }
 
+// Search Index for the main players search
 EasySearch.createSearchIndex('players', {
   'collection': Players, // instanceof Meteor.Collection
   'field': ['name', 'score'], // array of fields to be searchable
@@ -183,6 +184,15 @@ EasySearch.createSearchIndex('players', {
   }
 });
 
+// Search Index for the autosuggest field
+EasySearch.createSearchIndex('playersAutosuggest', {
+  'collection': Players, 
+  'use' : 'mongo-db',
+  'field': ['name', 'score'],
+  'convertNumbers': true
+});
+
+// Search Indexes for testing multiple indexes with one esInput
 EasySearch.createSearchIndex('testData', {
   collection: TestCollection,
   field: 'data',
