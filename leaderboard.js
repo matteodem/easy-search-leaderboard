@@ -17,8 +17,12 @@ if (Meteor.isClient) {
 
   Template.leaderboard.helpers({
     selected_name: function() {
-      var player = EasySearch.getIndex('players').findOne(Session.get("selected_player"));
-      return player && player.name;
+      var currentPlayer = Session.get("selected_player"),
+        player = EasySearch.getIndex('players').findOne();
+      
+      if (currentPlayer) {
+          return player && player.name;
+      }
     },
     showAutosuggest: function() {
       return Session.get('showAutosuggest');
@@ -76,6 +80,7 @@ if (Meteor.isClient) {
       EasySearch.changeProperty('players', 'filteredCategory', $(e.target).val());
       EasySearch.changeLimit('players', 10);
 
+      instance.paginate(1);
       instance.triggerSearch();
     }
   });

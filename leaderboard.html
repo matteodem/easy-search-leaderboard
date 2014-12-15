@@ -39,9 +39,10 @@
 
         {{#ifEsHasNoResults index="players" id="search" logic="OR" }}
             <div class="no-results">No results found!</div>
-        {{else}}
-            {{> esLoadMoreButton index="players" id="search" }}
         {{/ifEsHasNoResults}}
+
+        {{! > esLoadMoreButton index="players" id="search" }}
+        {{> esPagination index="players" id="search" }}
     </div>
 
     {{#if selected_name}}
