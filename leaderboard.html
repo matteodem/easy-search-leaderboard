@@ -14,11 +14,18 @@
     </div>
 
     <div class="margin-box">
-        <span>Filter by Category:</span>
-        <select>
+        <span>Filtered by category: </span>
+        <select class="filter-select">
             {{#each category}}
                 <option>{{this}}</option>
             {{/each}}
+        </select>
+        
+        <span>, sorted by </span>
+        <select class="sort-select">
+            <option data-sort="highest-score">highest Score</option>
+            <option data-sort="lowest-score">lowest Score</option>
+            <option data-sort="name">name</option>
         </select>
     </div>
 

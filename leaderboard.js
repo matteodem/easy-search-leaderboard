@@ -4,7 +4,7 @@
 Players = new Meteor.Collection("players");
 TestCollection = new Meteor.Collection('testData');
 
-var categories = ["Genius", "Geek", "Hipster", "Gangster", "Worker"]
+var categories = ["Genius", "Geek", "Hipster", "Gangster", "Worker"];
 
 if (Meteor.isClient) {
   Meteor.subscribe('allDocs');
@@ -71,13 +71,25 @@ if (Meteor.isClient) {
       Session.set('showMultipleIndexes', !Session.get('showMultipleIndexes'));
       e.preventDefault();
     },
-    'change select': function(e) {
+    'change .filter-select': function(e) {
       var instance = EasySearch.getComponentInstance({
         index: 'players',
         id: 'search'
       });
 
       EasySearch.changeProperty('players', 'filteredCategory', $(e.target).val());
+      EasySearch.changeLimit('players', 10);
+
+      instance.paginate(1);
+      instance.triggerSearch();
+    },
+    'change .sort-select': function(e) {
+      var instance = EasySearch.getComponentInstance({
+        index: 'players',
+        id: 'search'
+      });
+
+      EasySearch.changeProperty('players', 'sortBy', $(e.target).children(':selected').data('sort'));
       EasySearch.changeLimit('players', 10);
 
       instance.paginate(1);
@@ -171,10 +183,18 @@ EasySearch.createSearchIndex('players', {
   'use' : 'mongo-db',
   'convertNumbers': true,
   'props': {
-    'filteredCategory': 'All'
+    'filteredCategory': 'All',
+    'sortBy': 'score'
   },
   'sort': function() {
-    return { 'score': -1, 'name': -1 };
+    if (this.props.sortBy === 'name') {
+      return { 'name': 1 };
+    }  else if (this.props.sortBy === 'lowest-score') {
+      return { 'score': 1 };
+    }
+
+    // default by highest score
+    return { 'score': -1 };
   },
   'query': function(searchString, opts) {
     // Default query that will be used for the mongo-db selector
