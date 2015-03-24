@@ -69,7 +69,7 @@
     <button class="show-autosuggest">Show Autosuggest</button>
     {{#if showAutosuggest}}
         <h2>Autosuggest Demo</h2>
-        {{> esAutosuggest index="playersAutosuggest" id="autosuggest"  renderSuggestion=suggestionTpl }}
+        {{> esAutosuggest index="playersAutosuggest" id="autosuggest"  renderSuggestion="suggestion" renderValue="autosuggestValues" }}
     {{/if}}
 
     <button class="show-multiple-indexes">Search over multiple indexes</button>
@@ -110,6 +110,13 @@
             {{/ifEsIsSearching}}
         </div>
     {{/if}}
+</template>
+
+<template name="autosuggestValues">
+    <span class="value">
+        <a href="#" class="remove">X</a>
+        {{value}}
+    </span>
 </template>
 
 <template name="suggestion">
