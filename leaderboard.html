@@ -2,11 +2,16 @@
     <title>Leaderboard</title>
 </head>
 
-<body>
-<div id="outer">
-    {{> leaderboard}}
-</div>
-</body>
+<template name="home">
+    <div id="outer">
+        {{> leaderboard}}
+        <a href="/test">Go to test page</a>
+    </div>
+</template>
+
+<template name="test">
+    <a href="/">Go back</a>
+</template>
 
 <template name="leaderboard">
     <div class="search-input">

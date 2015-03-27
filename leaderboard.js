@@ -6,6 +6,14 @@ TestCollection = new Meteor.Collection('testData');
 
 var categories = ["Genius", "Geek", "Hipster", "Gangster", "Worker"];
 
+Router.route('/', function () {
+  this.render('home');
+});
+
+Router.route('/test', function () {
+  this.render('test');
+});
+
 if (Meteor.isClient) {
   Meteor.subscribe('allDocs');
 
