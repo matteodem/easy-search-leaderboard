@@ -208,6 +208,8 @@ EasySearch.createSearchIndex('players', {
     // Default query that will be used for the mongo-db selector
     var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
 
+    console.log(opts);
+
     // filter for categories if set
     if (this.props.filteredCategory.toLowerCase() !== 'all') {
       query.category = this.props.filteredCategory;
@@ -216,6 +218,21 @@ EasySearch.createSearchIndex('players', {
     return query;
   }
 });
+
+/*EasySearch.createSearchIndex('players', {
+  'collection': Players, // instanceof Meteor.Collection
+  'field': ['name'], // array of fields to be searchable
+  'limit': 10,
+  'use' : 'elastic-search',
+  'convertNumbers': true,
+  'props': {
+    'filteredCategory': 'All',
+    'sortBy': 'score'
+  },
+  'sort': function() {
+    return ['_score'];
+  }
+});*/
 
 // Search Index for the autosuggest field
 EasySearch.createSearchIndex('playersAutosuggest', {
