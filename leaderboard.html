@@ -1,137 +1,80 @@
 <head>
-    <title>Leaderboard</title>
+  <title>Leaderboard</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
 </head>
 
-<template name="home">
-    <div id="outer">
-        {{> leaderboard}}
-        <a href="/test">Go to test page</a>
+<body>
+    <div class="outer">
+      <div class="logo"></div>
+      <h1 class="title">Leaderboard</h1>
+      <div class="subtitle">Select a scientist to give them points</div>
+      {{> leaderboard}}
     </div>
-</template>
-
-<template name="test">
-    <a href="/">Go back</a>
-</template>
+</body>
 
 <template name="leaderboard">
-    <div class="search-input">
-        {{> esInput index="players" id="search" placeholder="Search players..." convertnumber=true }}
-    </div>
+  {{> EasySearch.Input index=index attributes=inputAttributes }}
 
-    <div class="margin-box">
-        <span>Filtered by category: </span>
-        <select class="filter-select">
-            {{#each category}}
-                <option>{{this}}</option>
-            {{/each}}
-        </select>
-        
-        <span>, sorted by </span>
-        <select class="sort-select">
-            <option data-sort="highest-score">highest Score</option>
-            <option data-sort="lowest-score">lowest Score</option>
-            <option data-sort="name">name</option>
-        </select>
-    </div>
-
-    {{#ifEsIsSearching index="players" id="search" logic="OR" }}
-        <div>Searching...</div>
-    {{/ifEsIsSearching}}
-
-    <div class="leaderboard">
-        {{#ifEsInputIsEmpty index="players" id="search" }}
-            <div class="please-search">There are {{allDocs}} documents for search available. (e.g {{playerNames}})</div>
-        {{else}}
-            <div class="please-search">There are other players called {{playerNames}}</div>
-        {{/ifEsInputIsEmpty}}
-
-        {{#esEach index="players" id="search"}}
-            {{> player}}
-        {{/esEach}}
-
-        {{#ifEsHasNoResults index="players" id="search" logic="OR" }}
-            <div class="no-results">No results found!</div>
-        {{/ifEsHasNoResults}}
-
-        {{! > esLoadMoreButton index="players" id="search" }}
-        {{> esPagination index="players" id="search" }}
-    </div>
-
-    {{#if selected_name}}
-        <div class="details">
-            <div class="name">{{selected_name}}</div>
-            <input type="button" class="inc" data-val="5" value="Give 5 points" />
-            <input type="button" class="inc" data-val="10" value="Give 10 points" />
-            <input type="button" class="inc" data-val="100" value="Give 100 points" />
-            <input type="button" class="inc" data-val="1000" value="Give 1000 points" />
-        </div>
+  {{#EasySearch.IfInputEmpty index=index }}
+    <div class="padded examples">For example "Grace Gaga"</div>
+  {{else}}
+    {{#if resultsCount}}
+      <div class="padded count-results">{{resultsCount}} results found.</div>
     {{/if}}
+  {{/EasySearch.IfInputEmpty}}
 
-    {{#unless selected_name}}
-        <div class="none">Click a player to select</div>
-    {{/unless}}
+  <select class="category-filter">
+    <option value="">All</option>
+    <option value="Hipster">Hipster</option>
+    <option value="Genius">Genius</option>
+    <option value="Idler">Idler</option>
+    <option value="Geek">Geek</option>
+  </select>
 
-    <button class="show-autosuggest">Show Autosuggest</button>
-    {{#if showAutosuggest}}
-        <h2>Autosuggest Demo</h2>
-        {{> esAutosuggest index="playersAutosuggest" id="autosuggest"  renderSuggestion="suggestion" renderValue="autosuggestValues" }}
+  {{#EasySearch.IfSearching index=index }}
+    <div>Searching</div>
+  {{/EasySearch.IfSearching }}
+
+  <ol class="leaderboard">
+    {{#EasySearch.Each index=index }}
+      {{> player}}
+    {{/EasySearch.Each}}
+  </ol>
+
+  {{#EasySearch.IfNoResults index=index }}
+    <div class="padded no-results">No results found</div>
+  {{else}}
+    {{#if selectedName}}
+      <div class="details">
+        <div class="name">{{selectedName}}</div>
+        <button class="inc">Add 5 points</button>
+      </div>
+    {{else}}
+      <div class="message">Click a player to select</div>
     {{/if}}
+  {{/EasySearch.IfNoResults }}
 
-    <button class="show-multiple-indexes">Search over multiple indexes</button>
-    {{#if showMultipleIndexes}}
-        <h2>Multiple Indexes</h2>
-        {{> esInput index=indexes placeholder="Search for Gaga" }}
+  {{> EasySearch.Pagination index=index maxPages=10 }}
+  {{! > EasySearch.LoadMore index=index }}
 
-        <div class="margin-box">
+  {{#if showMore}}
+    {{> EasySearch.Input name="mini-index" index=index attributes=inputAttributes }}
 
-            {{#ifEsIsSearching index=indexes logic="AND" }}
-                <div>Searching...</div>
-            {{else}}
-                {{#ifEsInputIsEmpty index=indexes }}
-                    Start searching!
-                {{else}}
-                    {{#ifEsHasNoResults index="localPlayers" }}
-                        <div>No results for local players!</div>
-                    {{else}}
-                        <h3>Local Players Results:</h3>
-                    {{/ifEsHasNoResults}}
-                    <ul>
-                        {{#esEach index="localPlayers" }}
-                            <li>{{name}}</li>
-                        {{/esEach}}
-                    </ul>
+    <ul>
+      {{#EasySearch.Each name="mini-index" index=index }}
+        <li>{{name}}</li>
+      {{/EasySearch.Each}}
+    </ul>
+  {{/if}}
 
-                    {{#ifEsHasNoResults index="testData" }}
-                        <div>No results for test data!</div>
-                    {{else}}
-                        <h3>Test Data Results:</h3>
-                    {{/ifEsHasNoResults}}
-                    <ul>
-                        {{#esEach index="testData" }}
-                            <li>{{data}}</li>
-                        {{/esEach}}
-                    </ul>
-                {{/ifEsInputIsEmpty}}
-            {{/ifEsIsSearching}}
-        </div>
-    {{/if}}
-</template>
-
-<template name="autosuggestValues">
-    <span class="value">
-        <a href="#" class="remove">X</a>
-        {{value}}
-    </span>
-</template>
-
-<template name="suggestion">
-    {{pre}}<span class="found">{{found}}</span>{{post}} ({{doc.score}})
 </template>
 
 <template name="player">
-    <div class="player {{selected}}">
-        <span class="name">{{name}}</span>
-        <span class="score">{{score}}</span>
-        <span class="categories">{{category}}</span>
-    </div>
+  <li class="player {{selected}}">
+    <span class="name">{{name}}</span>
+    <span class="metadata">
+      <span class="category">{{category}}</span><span class="score">{{score}}</span>
+    </span>
+  </li>
 </template>
