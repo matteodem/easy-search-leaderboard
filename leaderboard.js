@@ -89,9 +89,6 @@ if (Meteor.isClient) {
     console.log(PlayersIndex.search('Barack', { limit: 20 }).fetch());
   });
 
-  Tracker.autorun(() => {
-    console.log(PlayersIndex.search('Barack', { limit: 20 }).fetch());
-  });
 }
 
 // On server startup, create some players if the database is empty.
