@@ -9,7 +9,6 @@ easy:search
 easysearch:elasticsearch
 easysearch:autosuggest
 
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -25,3 +24,5 @@ spacebars
 ecmascript
 check
 accounts-base
+standard-minifier-css
+standard-minifier-js
