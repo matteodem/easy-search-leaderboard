@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Players } from '../../api/players/players.js';
 
 var first_names = [

@@ -1,4 +1,5 @@
 import './player.html';
+import { Template } from 'meteor/templating';
 
 Template.player.helpers({
 	selected: function () {

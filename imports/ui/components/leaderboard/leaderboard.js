@@ -1,6 +1,11 @@
 import './leaderboard.html';
 import '../players/player.js';
+import { Meteor } from 'meteor/meteor';
+import { Template } from 'meteor/templating';
+import { EasySearch } from 'meteor/easy:search';
+import { Players } from '../../../api/players/players.js';
 import { PlayersIndex } from '../../../api/players/players_index.js';
+import { $ } from 'meteor/jquery';
 
 Template.leaderboard.helpers({
 	inputAttributes: function () {
