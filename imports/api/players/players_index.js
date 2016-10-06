@@ -1,6 +1,4 @@
 import { Players } from './players.js';
-import { EasySearch } from 'meteor/easy:search';
-import { _ } from 'meteor/underscore';
 
 export const PlayersIndex = new EasySearch.Index({
   engine: new EasySearch.MongoDB({
