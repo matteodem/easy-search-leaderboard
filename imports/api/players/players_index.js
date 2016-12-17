@@ -1,9 +1,9 @@
 import { Players } from './players.js';
-import { EasySearch } from 'meteor/easy:search';
+import { Index, MongoDBEngine } from 'meteor/easy:search';
 import { _ } from 'meteor/underscore';
 
-export const PlayersIndex = new EasySearch.Index({
-  engine: new EasySearch.MongoDB({
+export const PlayersIndex = new Index({
+  engine: new MongoDBEngine({
     sort: function () {
       return { score: -1 };
     },
@@ -25,7 +25,6 @@ export const PlayersIndex = new EasySearch.Index({
   },
   permission: () => {
     //console.log(Meteor.userId());
-
     return true;
   }
 });

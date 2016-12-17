@@ -1,4 +1,6 @@
 <template name="leaderboard">
+  {{> EasySearch.Autosuggest index=index }}
+
   {{> EasySearch.Input index=index attributes=inputAttributes }}
 
   {{#EasySearch.IfInputEmpty index=index }}
