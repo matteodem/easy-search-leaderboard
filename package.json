@@ -1,0 +1,17 @@
+{
+  "name": "easy-search-leaderboard",
+  "version": "0.0.1",
+  "description": "One of the meteorjs examples enhanced with the easy-search package",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matteodem/easy-search-leaderboard.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/matteodem/easy-search-leaderboard/issues"
+  },
+  "homepage": "https://github.com/matteodem/easy-search-leaderboard",
+  "dependencies": {
+    "babel-runtime": "^6.22.0"
+  }
+}
